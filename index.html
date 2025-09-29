@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poor Tatar - Ранис</title>
+    <link rel="stylesheet" href="styles/desctopStyle.css">
+    <link rel="stylesheet" href="styles/mobileStyle.css">
+    <!-- Для генерации PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">Бедный Татарин</div>
+            <div class="user-info" id="userInfo"></div>
+            <div class="imgLogo"><img src="media/logoRanis.jfif" alt=""></div>
+        </header>
+
+        <div class="greeting" id="greeting">
+            <h1 id="greetingText"></h1>
+            <p id="dateInfo"></p>
+        </div>
+
+        <div class="dashboard">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Всего средств</div>
+                </div>
+                <div class="amount" id="totalAmount">0 ₽</div>
+                <div class="transactions" id="incomeTransactions"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Доходы</div>
+                    <button class="btn" id="addIncomeBtn">Добавить</button>
+                </div>
+                <div class="amount" id="incomeAmount">0 ₽</div>
+                <div class="transactions" id="incomeList"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Расходы</div>
+                    <button class="btn" id="addExpenseBtn">Добавить</button>
+                </div>
+                <div class="amount" id="expenseAmount">0 ₽</div>
+                <div class="transactions" id="expenseList"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Накопления</div>
+                    <button class="btn" id="manageSavingsBtn">Управлять</button>
+                </div>
+                <div class="amount" id="savingsAmount">0 ₽</div>
+                <div class="savings-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">0%</div>
+                </div>
+                <div class="transactions" id="savingsList"></div>
+            </div>
+        </div>
+
+        <div class="calendar">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Календарь</div>
+                </div>
+                <div class="calendar-header">
+                    <button class="btn" id="prevMonthBtn">←</button>
+                    <h3 id="currentMonth"></h3>
+                    <button class="btn" id="nextMonthBtn">→</button>
+                </div>
+                <div class="calendar-grid" id="calendarGrid"></div>
+            </div>
+        </div>
+
+        <div class="reports">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Отчеты</div>
+                </div>
+                <div class="report-filters">
+                    <button class="btn" data-period="day">За день</button>
+                    <button class="btn" data-period="week">За неделю</button>
+                    <button class="btn" data-period="month">За месяц</button>
+                    <button class="btn" id="customPeriodBtn">Выбрать период</button>
+                </div>
+                <div class="report-data" id="reportData">
+                    <p>Выберите период для просмотра отчета</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальные окна -->
+    <div class="modal" id="incomeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Добавить доход</h3>
+                <span class="close">&times;</span>
+            </div>
+            <form id="incomeForm">
+                <div class="form-group">
+                    <label for="incomeAmountInput">Сумма</label>
+                    <input type="number" id="incomeAmountInput" required>
+                </div>
+                <div class="form-group">
+                    <label for="incomeCategory">Категория</label>
+                    <select id="incomeCategory" required>
+                        <option value="salary">Зарплата</option>
+                        <option value="bonus">Премия</option>
+                        <option value="freelance">Подработка</option>
+                        <option value="gift">Подарок</option>
+                        <option value="other">Другое</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="incomeDate">Дата</label>
+                    <input type="date" id="incomeDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="incomeDescription">Описание</label>
+                    <input type="text" id="incomeDescription" placeholder="Необязательно">
+                </div>
+                <button type="submit" class="btn">Добавить</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="expenseModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Добавить расход</h3>
+                <span class="close">&times;</span>
+            </div>
+            <form id="expenseForm">
+                <div class="form-group">
+                    <label for="expenseAmountInput">Сумма</label>
+                    <input type="number" id="expenseAmountInput" required>
+                </div>
+                <div class="form-group">
+                    <label for="expenseCategory">Категория</label>
+                    <select id="expenseCategory" required>
+                        <option value="rent">Аренда</option>
+                        <option value="food">Еда</option>
+                        <option value="resourant">Кафе, рестораны</option>
+                        <option value="transport">Транспорт</option>
+                        <option value="entertainment">Развлечения</option>
+                        <option value="fitnes">Спорт-зал</option>
+                        <option value="taxi">Такси</option>
+                        <option value="health">Здоровье</option>
+                        <option value="shoping">Одежда</option>
+                        <option value="other">Другое</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="expenseDate">Дата</label>
+                    <input type="date" id="expenseDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="expenseDescription">Описание</label>
+                    <input type="text" id="expenseDescription" placeholder="Необязательно">
+                </div>
+                <button type="submit" class="btn">Добавить</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="savingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Управление накоплениями</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="savings-controls">
+                <button class="btn savings-action-btn" data-action="add">Добавить в накопления</button>
+                <button class="btn savings-action-btn" data-action="withdraw">Снять с накоплений</button>
+                <button class="btn savings-action-btn" data-action="setGoal">Установить цель</button>
+            </div>
+            <form id="savingsForm" style="display: none;">
+                <div class="form-group">
+                    <label for="savingsAmountInput" id="savingsAmountLabel">Сумма</label>
+                    <input type="number" id="savingsAmountInput" required>
+                </div>
+                <div class="form-group" id="goalGroup" style="display: none;">
+                    <label for="savingsGoalInput">Целевая сумма</label>
+                    <input type="number" id="savingsGoalInput">
+                </div>
+                <div class="form-group">
+                    <label for="savingsDescription">Описание</label>
+                    <input type="text" id="savingsDescription" placeholder="Необязательно">
+                </div>
+                <button type="submit" class="btn" id="savingsSubmitBtn">Подтвердить</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="editModalTitle">Редактировать</h3>
+                <span class="close">&times;</span>
+            </div>
+            <form id="editForm">
+                <input type="hidden" id="editId">
+                <input type="hidden" id="editType">
+                <div class="form-group">
+                    <label for="editAmountInput">Сумма</label>
+                    <input type="number" id="editAmountInput" required>
+                </div>
+                <div class="form-group">
+                    <label for="editCategory">Категория</label>
+                    <select id="editCategory" required>
+                        <!-- Категории будут заполнены динамически -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editDate">Дата</label>
+                    <input type="date" id="editDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="editDescription">Описание</label>
+                    <input type="text" id="editDescription" placeholder="Необязательно">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn">Сохранить</button>
+                    <button type="button" class="btn btn-danger" id="deleteBtn">Удалить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="customPeriodModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Выберите период</h3>
+                <span class="close">&times;</span>
+            </div>
+            <form id="customPeriodForm">
+                <div class="form-group">
+                    <label for="startDate">Начальная дата</label>
+                    <input type="date" id="startDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="endDate">Конечная дата</label>
+                    <input type="date" id="endDate" required>
+                </div>
+                <button type="submit" class="btn">Показать отчет</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+
+    <script src="js/functionalApp.js"></script>
+</body>
+
+</html>
