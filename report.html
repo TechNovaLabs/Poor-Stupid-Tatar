@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отчет по финансам - Бедный Татарин</title>
+    <link rel="stylesheet" href="../styles/desctopStyle.css">
+    <link rel="stylesheet" href="../styles/mobileStyle.css">
+    <style>
+        .report-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .report-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .report-period {
+            color: var(--secondary);
+            font-size: 1.2rem;
+            margin: 10px 0;
+        }
+        
+        .report-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .summary-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 4px var(--shadow);
+        }
+        
+        .summary-card.income { border-left: 4px solid var(--primary); }
+        .summary-card.expense { border-left: 4px solid var(--secondary); }
+        .summary-card.savings { border-left: 4px solid #0066cc; }
+        .summary-card.balance { border-left: 4px solid #ff9900; }
+        
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .transactions-section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            color: var(--primary);
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid var(--shadow);
+        }
+        
+        .transaction-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        .transaction-table th,
+        .transaction-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--shadow);
+        }
+        
+        .transaction-table th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: bold;
+        }
+        
+        .transaction-table tr:hover {
+            background-color: var(--background);
+        }
+        
+        .amount-positive { color: var(--primary); font-weight: bold; }
+        .amount-negative { color: var(--secondary); font-weight: bold; }
+        
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .back-button {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .back-button:hover {
+            text-decoration: underline;
+        }
+        
+        @media print {
+            .export-buttons, .back-button {
+                display: none;
+            }
+            
+            .report-container {
+                padding: 0;
+            }
+            
+            .summary-card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <a href="../index.html" class="back-button">← Назад к приложению</a>
+        
+        <div class="report-header">
+            <h1>Финансовый отчет</h1>
+            <div class="report-period" id="reportPeriod"></div>
+            <div class="report-date" id="reportDate"></div>
+        </div>
+        
+        <div class="export-buttons">
+            <button class="btn" onclick="printReport()">🖨️ Печать отчета</button>
+            <button class="btn" onclick="exportToPDF()">📄 Сохранить как PDF</button>
+            <!-- <button class="btn" onclick="exportToExcel()">📊 Экспорт в Excel</button> -->
+        </div>
+        
+        <div class="report-summary" id="reportSummary"></div>
+        
+        <div class="transactions-section">
+            <h2 class="section-title">Доходы</h2>
+            <table class="transaction-table" id="incomeTable">
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Категория</th>
+                        <th>Описание</th>
+                        <th>Сумма</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        
+        <div class="transactions-section">
+            <h2 class="section-title">Расходы</h2>
+            <table class="transaction-table" id="expenseTable">
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Категория</th>
+                        <th>Описание</th>
+                        <th>Сумма</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        
+        <div class="transactions-section">
+            <h2 class="section-title">Операции с накоплениями</h2>
+            <table class="transaction-table" id="savingsTable">
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Тип операции</th>
+                        <th>Описание</th>
+                        <th>Сумма</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        
+        <div class="transactions-section">
+            <h2 class="section-title">Статистика по категориям</h2>
+            <div id="categoryStats"></div>
+        </div>
+    </div>
+
+    <script src="../js/reportGenerator.js"></script>
+</body>
+</html>
