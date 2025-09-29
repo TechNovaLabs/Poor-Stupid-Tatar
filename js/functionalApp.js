@@ -544,7 +544,7 @@ function setupEventListeners() {
     // Обработчики для кнопок экспорта
     document.getElementById('viewFullReportBtn').addEventListener('click', function () {
         // Открываем полный отчет в той же вкладке
-        window.location.href = '../pages/report.html';
+        window.location.href = 'report.html';
     });
 
     document.getElementById('exportPDFBtn').addEventListener('click', function () {
@@ -860,4 +860,5 @@ function generateCustomReport(start, end) {
     }
 
     document.getElementById('reportData').innerHTML = reportHTML;
+
 }
