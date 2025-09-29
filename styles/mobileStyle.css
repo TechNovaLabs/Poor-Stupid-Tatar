@@ -1,0 +1,26 @@
+@media (max-width: 768px) {
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+
+    .greeting h1 {
+        font-size: 2rem;
+    }
+
+    .calendar-grid {
+        grid-template-columns: repeat(7, 1fr);
+        font-size: 0.8rem;
+    }
+
+    .calendar-day {
+        padding: 5px;
+    }
+
+    .imgLogo>img {
+        width: 40%;
+        border: 6px solid green;
+        border-radius: 100px;
+        margin-top: 30px;
+    }
+
+}
